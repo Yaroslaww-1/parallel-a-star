@@ -17,11 +17,11 @@ internal class AStarShortestPathSearchTest {
     private val v3: PlanarVertex = PlanarVertex(2, -2)
     private val v4: PlanarVertex = PlanarVertex(4, 0)
 
-    private val e12: WeightedEdge = WeightedEdge(1.0)
-    private val e13: WeightedEdge = WeightedEdge(0.5)
-    private val e14: WeightedEdge = WeightedEdge(4.0)
-    private val e24: WeightedEdge = WeightedEdge(2.0)
-    private val e34: WeightedEdge = WeightedEdge(3.0)
+    private val e12: WeightedEdge = WeightedEdge(10.0 + 1.0)
+    private val e13: WeightedEdge = WeightedEdge(10.0 + 0.5)
+    private val e14: WeightedEdge = WeightedEdge(10.0 + 4.0)
+    private val e24: WeightedEdge = WeightedEdge(10.0 + 2.0)
+    private val e34: WeightedEdge = WeightedEdge(10.0 + 3.0)
 
     private lateinit var graph : StandardGraph<PlanarVertex, WeightedEdge>
     private val heuristic: AStarAdmissibleHeuristic<PlanarVertex> = AStarEuclideanDistanceHeuristic()
