@@ -93,8 +93,7 @@ internal class StandardUndirectedGraphTest {
     }
 
     @Test
-    fun outgoingEdgesOf() {
-        val outgoingVertices = graph.outgoingEdgesOf(v1).map { edge -> edge.first }.toSet()
-        assertEquals(setOf(v2, v4), outgoingVertices)
+    fun outgoingNeighboursOf() {
+        assertEquals(setOf(v2, v4), graph.outgoingNeighboursOf(v1))
     }
 }

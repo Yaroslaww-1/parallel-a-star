@@ -30,10 +30,8 @@ public class AStarShortestPathSearch<V : Vertex>(
 
             if (current == destination) break
 
-            for (outgoingEdge in graph.outgoingEdgesOf(current)) {
-                val neighbour = outgoingEdge.first
-                val edge = outgoingEdge.second
-                val newDistanceToNeighbour = distance.getValue(current) + edge.weight
+            for (neighbour in graph.outgoingNeighboursOf(current)) {
+                val newDistanceToNeighbour = distance.getValue(current) + graph.getEdge(current, neighbour)!!.weight
                 if (newDistanceToNeighbour < distance.getValue(neighbour)) {
                     q.remove(neighbour)
                     distance[neighbour] = newDistanceToNeighbour
@@ -45,13 +43,7 @@ public class AStarShortestPathSearch<V : Vertex>(
             }
         }
 
-        val path = ShortestPath.reversed(destination)
-        var lastVertex = destination
-        while (parent[lastVertex] != null && graph.getEdge(parent[lastVertex]!!, lastVertex) != null) {
-            path.prepend(parent[lastVertex]!!, graph.getEdge(parent[lastVertex]!!, lastVertex)!!)
-            lastVertex = parent[lastVertex]!!
-        }
-        return path
+        return ShortestPath.ofParentMapAndDestination(parent, destination, graph)
     }
 
     private class VertexDistanceComparator<V>(private val distance: MutableMap<V, Double>) : Comparator<V> {

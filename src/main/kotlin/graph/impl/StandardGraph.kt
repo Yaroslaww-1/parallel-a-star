@@ -46,7 +46,7 @@ public open class StandardGraph<V : Vertex, E : Edge>(override val isDirected: B
     }
 
     // Other
-    override fun outgoingEdgesOf(vertex: V): Set<Pair<V, E>> {
-        return vertexConnections[vertex]?.map { (vertex, edge) -> Pair(vertex, edge) }?.toSet() ?: emptySet()
+    override fun outgoingNeighboursOf(vertex: V): Set<V> {
+        return vertexConnections[vertex]?.map { (vertex, edge) -> vertex }?.toSet() ?: emptySet()
     }
 }

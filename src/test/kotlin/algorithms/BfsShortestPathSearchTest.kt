@@ -1,6 +1,8 @@
 package algorithms
 
+import algorithms.astar.AStarShortestPathSearch
 import graph.impl.IdVertex
+import graph.impl.PlanarVertex
 import graph.impl.StandardGraph
 import graph.impl.WeightedEdge
 import org.junit.jupiter.api.BeforeEach
@@ -46,31 +48,15 @@ internal class BfsShortestPathSearchTest {
     @Test
     fun searchDirected() {
         val searcher = BfsShortestPathSearch(graphDirected)
-
-        val expectedPath = ShortestPath.ordered(v1)
-        expectedPath.append(v4, e14)
-
-        val actualPath = searcher.search(v1, v4)
-
-        assertEquals(expectedPath, actualPath)
-        assertEquals(1.0, actualPath.totalWeight)
+        assertEquals(DijkstraShortestPathSearch(graphDirected).search(v1, v4), searcher.search(v1, v4))
+        assertEquals(DijkstraShortestPathSearch(graphDirected).search(v2, v3), searcher.search(v2, v3))
     }
 
     @Test
     fun searchUnDirected() {
         val searcher = BfsShortestPathSearch(graphUnDirected)
-
-        val expectedPath1 = ShortestPath.ordered(v2)
-        expectedPath1.append(v1, e12)
-        expectedPath1.append(v3, e13)
-        val expectedPath2 = ShortestPath.ordered(v2)
-        expectedPath2.append(v4, e24)
-        expectedPath2.append(v3, e34)
-
-        val actualPath = searcher.search(v2, v3)
-
-        assertTrue(expectedPath1 == actualPath || expectedPath2 == actualPath)
-        assertEquals(2.0, actualPath.totalWeight)
+        assertEquals(DijkstraShortestPathSearch(graphUnDirected).search(v1, v4), searcher.search(v1, v4))
+        assertEquals(DijkstraShortestPathSearch(graphUnDirected).search(v2, v3), searcher.search(v2, v3))
     }
 
     @Test

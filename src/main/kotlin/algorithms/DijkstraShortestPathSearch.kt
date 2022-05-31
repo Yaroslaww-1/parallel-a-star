@@ -8,9 +8,10 @@ import java.util.*
 public class DijkstraShortestPathSearch<V : Vertex>(
     private val graph : Graph<V, WeightedEdge>
 ) : ShortestPathSearch<V> {
+
     override fun search(source: V, destination: V): ShortestPath<V> {
         val distance: MutableMap<V, Double> = hashMapOf<V, Double>().withDefault { Double.MAX_VALUE }
-        val parent: HashMap<V, Pair<V, WeightedEdge>> = hashMapOf()
+        val parent: HashMap<V, V> = hashMapOf()
 
         distance[source] = 0.0
 
@@ -18,28 +19,21 @@ public class DijkstraShortestPathSearch<V : Vertex>(
         q.add(source)
 
         while (q.isNotEmpty()) {
-            val v = q.first()
-            q.remove(v)
+            val current = q.first()
+            q.remove(current)
 
-            for (outgoingEdge in graph.outgoingEdgesOf(v)) {
-                val to = outgoingEdge.first
-                val edge = outgoingEdge.second
-                if (distance.getValue(v) + edge.weight < distance.getValue(to)) {
-                    q.remove(to)
-                    distance[to] = distance.getValue(v) + edge.weight
-                    parent[to] = Pair(v, edge)
-                    q.add(to)
+            for (neighbour in graph.outgoingNeighboursOf(current)) {
+                val newDistanceToNeighbour = distance.getValue(current) + graph.getEdge(current, neighbour)!!.weight
+                if (newDistanceToNeighbour < distance.getValue(neighbour)) {
+                    q.remove(neighbour)
+                    distance[neighbour] = newDistanceToNeighbour
+                    parent[neighbour] = current
+                    q.add(neighbour)
                 }
             }
         }
 
-        val path = ShortestPath.reversed(destination)
-        var lastVertex = destination
-        while (parent[lastVertex] != null) {
-            path.prepend(parent[lastVertex]!!.first, parent[lastVertex]!!.second)
-            lastVertex = parent[lastVertex]!!.first
-        }
-        return path
+        return ShortestPath.ofParentMapAndDestination(parent, destination, graph)
     }
 
     private class VertexDistanceComparator<V>(private val distance: MutableMap<V, Double>) : Comparator<V> {

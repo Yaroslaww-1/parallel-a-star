@@ -25,7 +25,6 @@ internal class AStarShortestPathSearchTest {
     private val e34: WeightedEdge = WeightedEdge(3.0)
 
     private lateinit var graph : StandardGraph<PlanarVertex, WeightedEdge>
-    private lateinit var dijkstraSearcher: DijkstraShortestPathSearch<PlanarVertex>
     private val heuristic: AStarAdmissibleHeuristic<PlanarVertex> = AStarEuclideanDistanceHeuristic()
 
     @BeforeEach
@@ -37,14 +36,13 @@ internal class AStarShortestPathSearchTest {
         graph.addEdge(v1, v4, e14)
         graph.addEdge(v2, v4, e24)
         graph.addEdge(v3, v4, e34)
-        dijkstraSearcher = DijkstraShortestPathSearch(graph)
     }
 
     @Test
     fun search() {
         val searcher = AStarShortestPathSearch(graph, heuristic)
-        assertEquals(dijkstraSearcher.search(v1, v4), searcher.search(v1, v4))
-        assertEquals(dijkstraSearcher.search(v2, v3), searcher.search(v2, v3))
+        assertEquals(DijkstraShortestPathSearch(graph).search(v1, v4), searcher.search(v1, v4))
+        assertEquals(DijkstraShortestPathSearch(graph).search(v2, v3), searcher.search(v2, v3))
     }
 
     @Test

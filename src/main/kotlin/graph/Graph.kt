@@ -16,5 +16,5 @@ public interface Graph<V : Vertex, E : Edge> {
     public fun containsVertex(vertex: V): Boolean
     public fun containsEdge(vertex1: V, vertex2: V): Boolean
 
-    public fun outgoingEdgesOf(vertex: V): Set<Pair<V, E>>
+    public fun outgoingNeighboursOf(vertex: V): Set<V>
 }
