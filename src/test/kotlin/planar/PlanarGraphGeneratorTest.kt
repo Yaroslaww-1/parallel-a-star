@@ -21,7 +21,6 @@ internal class PlanarGraphGeneratorTest {
             10000, 1000, 4, 50)
         val dijkstraPath = DijkstraShortestPathSearch(graph).search(source, destination)
         val aStarPath = AStarShortestPathSearch(graph, AStarEuclideanDistanceHeuristic()).search(source, destination)
-        println(aStarPath)
         assertEquals(dijkstraPath, aStarPath)
     }
 }
