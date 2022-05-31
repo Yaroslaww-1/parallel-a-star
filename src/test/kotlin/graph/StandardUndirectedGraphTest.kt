@@ -96,4 +96,9 @@ internal class StandardUndirectedGraphTest {
     fun outgoingNeighboursOf() {
         assertEquals(setOf(v2, v4), graph.outgoingNeighboursOf(v1))
     }
+
+    @Test
+    fun degreeOf() {
+        assertEquals(2, graph.degreeOf(v1))
+    }
 }

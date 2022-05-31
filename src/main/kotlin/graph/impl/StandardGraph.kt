@@ -49,4 +49,6 @@ public open class StandardGraph<V : Vertex, E : Edge>(override val isDirected: B
     override fun outgoingNeighboursOf(vertex: V): Set<V> {
         return vertexConnections[vertex]?.map { (vertex, edge) -> vertex }?.toSet() ?: emptySet()
     }
+
+    override fun degreeOf(vertex: V): Int = outgoingNeighboursOf(vertex).size
 }
