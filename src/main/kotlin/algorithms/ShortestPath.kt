@@ -1,5 +1,7 @@
 package algorithms
 
+import graph.Edge
+import graph.Graph
 import graph.Vertex
 import graph.impl.WeightedEdge
 import java.util.LinkedList
@@ -21,6 +23,17 @@ public abstract class ShortestPath<V : Vertex> private constructor() {
         }
         public fun <V : Vertex> reversed(destination: V): ReversedShortestPath<V> {
             return ReversedShortestPath(destination)
+        }
+
+        public fun <V : Vertex> ofParentMapAndDestination(parent: HashMap<V, V>, destination: V, graph: Graph<V, WeightedEdge>)
+                : ReversedShortestPath<V> {
+            val path = reversed(destination)
+            var lastVertex = destination
+            while (parent[lastVertex] != null && graph.getEdge(parent[lastVertex]!!, lastVertex) != null) {
+                path.prepend(parent[lastVertex]!!, graph.getEdge(parent[lastVertex]!!, lastVertex)!!)
+                lastVertex = parent[lastVertex]!!
+            }
+            return path
         }
     }
 
