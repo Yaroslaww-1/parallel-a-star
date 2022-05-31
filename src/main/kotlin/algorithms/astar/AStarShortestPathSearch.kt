@@ -8,8 +8,8 @@ import graph.impl.WeightedEdge
 import java.util.*
 import kotlin.collections.HashMap
 
-public class AStarShortestPathSearch<V : Vertex>(
-    private val graph : Graph<V, WeightedEdge>,
+public class AStarShortestPathSearch<V : Vertex, E : WeightedEdge>(
+    private val graph : Graph<V, E>,
     private val heuristic: AStarAdmissibleHeuristic<V>
 ) : ShortestPathSearch<V> {
 

@@ -7,8 +7,8 @@ import java.util.*
 import kotlin.collections.HashMap
 import kotlin.collections.HashSet
 
-public class BfsShortestPathSearch<V : Vertex>(
-    private val graph : Graph<V, WeightedEdge>
+public class BfsShortestPathSearch<V : Vertex, E : WeightedEdge>(
+    private val graph : Graph<V, E>
 ) : ShortestPathSearch<V> {
 
     override fun search(source: V, destination: V): ShortestPath<V> {

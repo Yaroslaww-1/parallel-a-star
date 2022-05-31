@@ -5,8 +5,8 @@ import graph.Vertex
 import graph.impl.WeightedEdge
 import java.util.*
 
-public class DijkstraShortestPathSearch<V : Vertex>(
-    private val graph : Graph<V, WeightedEdge>
+public class DijkstraShortestPathSearch<V : Vertex, E : WeightedEdge>(
+    private val graph : Graph<V, E>
 ) : ShortestPathSearch<V> {
 
     override fun search(source: V, destination: V): ShortestPath<V> {
