@@ -5,6 +5,7 @@ import graph.impl.IdVertex
 import graph.impl.StandardGraph
 import graph.impl.WeightedEdge
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 internal class AbstractShortestPathTest {
@@ -72,5 +73,25 @@ internal class AbstractShortestPathTest {
         expectedPath.append(v4, e34)
 
         assertTrue(expectedPath == actualPath)
+    }
+
+    @Test
+    fun distanceInVertices() {
+        val path = ShortestPath.ordered(v1)
+        path.append(v2, e12)
+        path.append(v3, e23)
+        path.append(v4, e34)
+        assertEquals(4, path.distanceInVertices)
+    }
+
+    @Test
+    fun containsEdge() {
+        val path = ShortestPath.ordered(v1)
+        path.append(v2, e12)
+        path.append(v3, e23)
+        path.append(v4, e34)
+        assertTrue(path.containsEdge(v1, v2, e12))
+        assertTrue(path.containsEdge(v2, v3, e23))
+        assertTrue(path.containsEdge(v3, v4, e34))
     }
 }

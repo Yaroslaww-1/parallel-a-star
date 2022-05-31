@@ -14,7 +14,10 @@ public abstract class ShortestPath<V : Vertex> private constructor() {
     public var totalWeight: Double = 0.0
         internal set
 
-    public val path: List<ShortestPathFragment<V>> = LinkedList()
+    internal val path: List<ShortestPathFragment<V>> = LinkedList()
+
+    public val distanceInVertices: Int
+        get() = path.size + 1
 
     public companion object {
         public fun <V : Vertex> ordered(source: V): OrderedShortestPath<V> {
@@ -24,8 +27,11 @@ public abstract class ShortestPath<V : Vertex> private constructor() {
             return ReversedShortestPath(destination)
         }
 
-        public fun <V : Vertex> ofParentMapAndDestination(parent: HashMap<V, V>, destination: V, graph: Graph<V, WeightedEdge>)
-                : ReversedShortestPath<V> {
+        public fun <V : Vertex, E : WeightedEdge> ofParentMapAndDestination(
+            parent: HashMap<V, V>,
+            destination: V,
+            graph: Graph<V, E>
+        ) : ReversedShortestPath<V> {
             val path = reversed(destination)
             var lastVertex = destination
             while (parent[lastVertex] != null && graph.getEdge(parent[lastVertex]!!, lastVertex) != null) {
@@ -37,6 +43,9 @@ public abstract class ShortestPath<V : Vertex> private constructor() {
     }
 
     public fun isEmpty(): Boolean = path.isEmpty()
+    public fun isNotEmpty(): Boolean = path.isNotEmpty()
+    public fun containsEdge(source: V, destination: V, edge: WeightedEdge): Boolean = path.contains(
+        ShortestPathFragment(source, destination, edge))
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
