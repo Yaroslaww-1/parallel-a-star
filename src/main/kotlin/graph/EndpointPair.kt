@@ -4,7 +4,7 @@ public abstract class EndpointPair<V : Vertex> private constructor(
     public val source: V,
     public val destination: V
 ) {
-    public abstract val isDirected: Boolean
+    internal abstract val isDirected: Boolean
 
     public companion object {
         public fun <V : Vertex> directed(source: V, destination : V) : EndpointPair<V> =

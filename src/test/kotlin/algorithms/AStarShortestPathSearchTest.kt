@@ -3,7 +3,6 @@ package algorithms
 import algorithms.astar.AStarAdmissibleHeuristic
 import algorithms.astar.AStarEuclideanDistanceHeuristic
 import algorithms.astar.AStarShortestPathSearch
-import graph.impl.IdVertex
 import graph.impl.PlanarVertex
 import graph.impl.StandardGraph
 import graph.impl.WeightedEdge

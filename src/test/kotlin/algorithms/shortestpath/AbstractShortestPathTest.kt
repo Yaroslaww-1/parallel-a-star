@@ -1,14 +1,10 @@
 package algorithms.shortestpath
 
 import algorithms.ShortestPath
-import algorithms.ShortestPathSearch
-import graph.Edge
 import graph.impl.IdVertex
 import graph.impl.StandardGraph
 import graph.impl.WeightedEdge
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 internal class AbstractShortestPathTest {
@@ -39,22 +35,18 @@ internal class AbstractShortestPathTest {
         orderedPath3.append(v1, e12)
         orderedPath3.append(v2, e23)
 
-        assertTrue(orderedPath1 == orderedPath1)
         assertTrue(orderedPath1 == reversedPath1)
         assertTrue(orderedPath1 != reversedPath2)
         assertTrue(orderedPath1 != orderedPath3)
 
-        assertTrue(reversedPath1 == reversedPath1)
         assertTrue(reversedPath1 == orderedPath1)
         assertTrue(reversedPath1 != reversedPath2)
         assertTrue(reversedPath1 != orderedPath3)
 
-        assertTrue(reversedPath2 == reversedPath2)
         assertTrue(reversedPath2 != orderedPath1)
         assertTrue(reversedPath2 != reversedPath1)
         assertTrue(reversedPath2 != orderedPath3)
 
-        assertTrue(orderedPath3 == orderedPath3)
         assertTrue(orderedPath3 != orderedPath1)
         assertTrue(orderedPath3 != reversedPath1)
         assertTrue(orderedPath3 != reversedPath2)

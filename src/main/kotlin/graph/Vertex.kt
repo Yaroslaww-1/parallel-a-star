@@ -1,4 +1,3 @@
 package graph
 
-public interface Vertex {
-}
+public interface Vertex

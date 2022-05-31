@@ -1,4 +1,3 @@
 package graph
 
-public interface Edge {
-}
+public interface Edge
