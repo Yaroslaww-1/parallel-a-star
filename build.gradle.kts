@@ -5,6 +5,10 @@ plugins {
     application
 }
 
+kotlin {
+    explicitApi()
+}
+
 group = "org.example"
 version = "1.0-SNAPSHOT"
 
@@ -13,6 +17,7 @@ repositories {
 }
 
 dependencies {
+    implementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation(kotlin("test"))
 }
 
