@@ -1,5 +1,6 @@
-package algorithms
+package algorithms.dijkstra
 
+import algorithms.ShortestPath
 import graph.impl.IdVertex
 import graph.impl.StandardGraph
 import graph.impl.WeightedEdge
@@ -8,17 +9,17 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-internal class BfsShortestPathSearchTest {
+internal class DijkstraShortestPathSearchTest {
     private val v1: IdVertex = IdVertex()
     private val v2: IdVertex = IdVertex()
     private val v3: IdVertex = IdVertex()
     private val v4: IdVertex = IdVertex()
 
-    private val e12: WeightedEdge = WeightedEdge(1.0)
-    private val e13: WeightedEdge = WeightedEdge(1.0)
-    private val e14: WeightedEdge = WeightedEdge(1.0)
-    private val e24: WeightedEdge = WeightedEdge(1.0)
-    private val e34: WeightedEdge = WeightedEdge(1.0)
+    private val e12: WeightedEdge = WeightedEdge(10)
+    private val e13: WeightedEdge = WeightedEdge(5)
+    private val e14: WeightedEdge = WeightedEdge(40)
+    private val e24: WeightedEdge = WeightedEdge(20)
+    private val e34: WeightedEdge = WeightedEdge(30)
 
     private lateinit var graphDirected : StandardGraph<IdVertex, WeightedEdge>
 
@@ -45,22 +46,36 @@ internal class BfsShortestPathSearchTest {
 
     @Test
     fun searchDirected() {
-        val searcher = BfsShortestPathSearch(graphDirected)
-        assertEquals(DijkstraShortestPathSearch(graphDirected).search(v1, v4), searcher.search(v1, v4))
-        assertEquals(DijkstraShortestPathSearch(graphDirected).search(v2, v3), searcher.search(v2, v3))
+        val searcher = DijkstraShortestPathSearch(graphDirected)
+
+        val expectedPath = ShortestPath.empty(v1)
+        expectedPath.append(v2, e12)
+        expectedPath.append(v4, e24)
+
+        val actualPath = searcher.search(v1, v4)
+
+        assertEquals(expectedPath, actualPath)
+        assertEquals(3, actualPath.totalWeight)
     }
 
     @Test
     fun searchUnDirected() {
-        val searcher = BfsShortestPathSearch(graphUnDirected)
-        assertEquals(DijkstraShortestPathSearch(graphUnDirected).search(v1, v4), searcher.search(v1, v4))
-        assertEquals(DijkstraShortestPathSearch(graphUnDirected).search(v2, v3), searcher.search(v2, v3))
+        val searcher = DijkstraShortestPathSearch(graphUnDirected)
+
+        val expectedPath = ShortestPath.empty(v2)
+        expectedPath.append(v1, e12)
+        expectedPath.append(v3, e13)
+
+        val actualPath = searcher.search(v2, v3)
+
+        assertEquals(expectedPath, actualPath)
+        assertEquals(1, actualPath.totalWeight)
     }
 
     @Test
     fun searchEmpty() {
         val graphEmpty : StandardGraph<IdVertex, WeightedEdge> = StandardGraph(false)
-        val searcher = BfsShortestPathSearch(graphEmpty)
+        val searcher = DijkstraShortestPathSearch(graphEmpty)
         assertTrue(searcher.search(v1, v4).isEmpty())
     }
 }
