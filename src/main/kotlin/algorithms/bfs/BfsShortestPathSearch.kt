@@ -1,5 +1,7 @@
-package algorithms
+package algorithms.bfs
 
+import algorithms.ShortestPath
+import algorithms.ShortestPathSearch
 import graph.Graph
 import graph.Vertex
 import graph.impl.WeightedEdge

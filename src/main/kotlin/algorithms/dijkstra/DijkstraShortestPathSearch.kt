@@ -1,5 +1,7 @@
-package algorithms
+package algorithms.dijkstra
 
+import algorithms.ShortestPath
+import algorithms.ShortestPathSearch
 import graph.Graph
 import graph.Vertex
 import graph.impl.WeightedEdge
@@ -10,7 +12,7 @@ public class DijkstraShortestPathSearch<V : Vertex, E : WeightedEdge>(
 ) : ShortestPathSearch<V> {
 
     override fun search(source: V, destination: V): ShortestPath<V> {
-        val distance: MutableMap<V, Double> = hashMapOf<V, Double>().withDefault { Double.MAX_VALUE }
+        val distance: MutableMap<V, Double> = hashMapOf<V, Double>().withDefault { 10000000.0 }
         val parent: HashMap<V, V> = hashMapOf()
 
         distance[source] = 0.0
@@ -23,7 +25,7 @@ public class DijkstraShortestPathSearch<V : Vertex, E : WeightedEdge>(
             q.remove(current)
 
             for (neighbour in graph.outgoingNeighboursOf(current)) {
-                val newDistanceToNeighbour = distance.getValue(current) + graph.getEdge(current, neighbour)!!.weight
+                val newDistanceToNeighbour = distance.getValue(current) + graph.getEdge(current, neighbour)!!.distance
                 if (newDistanceToNeighbour < distance.getValue(neighbour)) {
                     q.remove(neighbour)
                     distance[neighbour] = newDistanceToNeighbour
@@ -36,9 +38,12 @@ public class DijkstraShortestPathSearch<V : Vertex, E : WeightedEdge>(
         return ShortestPath.ofParentMapAndDestination(parent, destination, graph)
     }
 
-    private class VertexDistanceComparator<V>(private val distance: MutableMap<V, Double>) : Comparator<V> {
+    private class VertexDistanceComparator<V : Comparable<V>>(private val distance: MutableMap<V, Double>) : Comparator<V> {
         override fun compare(v1: V, v2: V): Int {
-            return distance.getValue(v1).compareTo(distance.getValue(v2))
+            val distance1 = distance.getValue(v1)
+            val distance2 = distance.getValue(v2)
+            return if (distance1 == distance2) v1.compareTo(v2)
+            else distance1.compareTo(distance2)
         }
     }
 }
