@@ -1,6 +1,5 @@
-package algorithms.shortestpath
+package algorithms
 
-import algorithms.ShortestPath
 import graph.impl.IdVertex
 import graph.impl.StandardGraph
 import graph.impl.WeightedEdge
@@ -8,31 +7,31 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-internal class AbstractShortestPathTest {
+internal class ShortestPathTest {
     private val v1: IdVertex = IdVertex()
     private val v2: IdVertex = IdVertex()
     private val v3: IdVertex = IdVertex()
     private val v4: IdVertex = IdVertex()
 
-    private val e12: WeightedEdge = WeightedEdge(1.0)
-    private val e23: WeightedEdge = WeightedEdge(2.0)
-    private val e34: WeightedEdge = WeightedEdge(0.5)
+    private val e12: WeightedEdge = WeightedEdge(10)
+    private val e23: WeightedEdge = WeightedEdge(20)
+    private val e34: WeightedEdge = WeightedEdge(5)
 
     @Test
     fun testEquals() {
-        val orderedPath1 = ShortestPath.ordered(v1)
+        val orderedPath1 = ShortestPath.empty(v1)
         orderedPath1.append(v2, e12)
         orderedPath1.append(v3, e23)
         orderedPath1.append(v4, e34)
 
-        val reversedPath1 = ShortestPath.reversed(v4)
+        val reversedPath1 = ShortestPath.empty(v4)
         reversedPath1.prepend(v3, e34)
         reversedPath1.prepend(v2, e23)
         reversedPath1.prepend(v1, e12)
 
-        val reversedPath2 = ShortestPath.reversed(v3)
+        val reversedPath2 = ShortestPath.empty(v3)
 
-        val orderedPath3 = ShortestPath.ordered(v3)
+        val orderedPath3 = ShortestPath.empty(v3)
         orderedPath3.append(v1, e12)
         orderedPath3.append(v2, e23)
 
@@ -67,7 +66,7 @@ internal class AbstractShortestPathTest {
         parent[v2] = v1
         val actualPath = ShortestPath.ofParentMapAndDestination(parent, v4, graph)
 
-        val expectedPath = ShortestPath.ordered(v1)
+        val expectedPath = ShortestPath.empty(v1)
         expectedPath.append(v2, e12)
         expectedPath.append(v3, e23)
         expectedPath.append(v4, e34)
@@ -77,7 +76,7 @@ internal class AbstractShortestPathTest {
 
     @Test
     fun distanceInVertices() {
-        val path = ShortestPath.ordered(v1)
+        val path = ShortestPath.empty(v1)
         path.append(v2, e12)
         path.append(v3, e23)
         path.append(v4, e34)
@@ -85,8 +84,35 @@ internal class AbstractShortestPathTest {
     }
 
     @Test
+    fun getTotalWeight() {
+        val path = ShortestPath.empty(v2)
+        path.prepend(v1, e12)
+        path.append(v3, e23)
+        path.append(v4, e34)
+        assertEquals(e12.distance + e23.distance + e34.distance, path.totalWeight)
+    }
+
+    @Test
+    fun getSource() {
+        val path = ShortestPath.empty(v2)
+        path.prepend(v1, e12)
+        path.append(v3, e23)
+        path.append(v4, e34)
+        assertEquals(v1, path.source)
+    }
+
+    @Test
+    fun getDestination() {
+        val path = ShortestPath.empty(v2)
+        path.prepend(v1, e12)
+        path.append(v3, e23)
+        path.append(v4, e34)
+        assertEquals(v4, path.destination)
+    }
+
+    @Test
     fun containsEdge() {
-        val path = ShortestPath.ordered(v1)
+        val path = ShortestPath.empty(v1)
         path.append(v2, e12)
         path.append(v3, e23)
         path.append(v4, e34)
