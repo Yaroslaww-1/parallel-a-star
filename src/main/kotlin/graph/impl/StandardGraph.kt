@@ -13,9 +13,11 @@ public open class StandardGraph<V : Vertex, E : Edge>(override val isDirected: B
             vertexConnections.values.flatMap { connections -> connections.keys })
 
     override fun addVertex(vertex: V) {
-        if (!containsVertex(vertex)) {
-            vertexConnections[vertex] = hashMapOf()
-        }
+        vertexConnections[vertex] = hashMapOf()
+
+//        if (!containsVertex(vertex)) {
+//            vertexConnections[vertex] = hashMapOf()
+//        }
     }
 
     override fun addVertices(vertices: List<V>): Unit = vertices.forEach(::addVertex)
@@ -27,9 +29,9 @@ public open class StandardGraph<V : Vertex, E : Edge>(override val isDirected: B
         get() = vertexConnections.values.flatMap { connections -> connections.values }.toSet()
 
     override fun addEdge(vertex1: V, vertex2: V, edge: E) {
-        if (!containsVertex(vertex1) || !containsVertex(vertex2)) {
-            throw IllegalArgumentException("Vertices provided should already be in graph")
-        }
+//        if (!containsVertex(vertex1) || !containsVertex(vertex2)) {
+//            throw IllegalArgumentException("Vertices provided should already be in graph")
+//        }
 
         vertexConnections[vertex1]!![vertex2] = edge
         if (!isDirected) vertexConnections[vertex2]!![vertex1] = edge
@@ -50,5 +52,5 @@ public open class StandardGraph<V : Vertex, E : Edge>(override val isDirected: B
         return vertexConnections[vertex]?.map { (vertex, edge) -> vertex }?.toSet() ?: emptySet()
     }
 
-    override fun degreeOf(vertex: V): Int = outgoingNeighboursOf(vertex).size
+    override fun degreeOf(vertex: V): Int = vertexConnections[vertex]?.size ?: 0
 }
