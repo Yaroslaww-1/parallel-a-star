@@ -7,4 +7,8 @@ public data class ShortestPathFragment<V : Vertex>(
     public val source: V,
     public val destination: V,
     public val edge: WeightedEdge,
-)
+) {
+    override fun toString(): String {
+        return "$source -$edge-> $destination"
+    }
+}
