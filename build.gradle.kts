@@ -20,6 +20,7 @@ dependencies {
     implementation("org.junit.jupiter:junit-jupiter:5.8.2")
     // https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
+    implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.3.0") //for JVM platform
     testImplementation(kotlin("test"))
 }
 
