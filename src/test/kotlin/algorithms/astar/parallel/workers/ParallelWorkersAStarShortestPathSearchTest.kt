@@ -1,4 +1,4 @@
-package algorithms.astar.parallel.bidirectional
+package algorithms.astar.parallel.workers
 
 import algorithms.astar.heuristic.AStarEuclideanDistanceHeuristic
 import algorithms.dijkstra.DijkstraShortestPathSearch
@@ -14,7 +14,7 @@ import planar.generator.PlanarGraphGenerator
 import planar.generator.PlanarKNearestEdgesGenerator
 import planar.generator.PlanarVerticesGenerator
 
-internal class ParallelBidirectionalAStarShortestPathSearchTest {
+internal class ParallelWorkersAStarShortestPathSearchTest {
     private lateinit var generator: PlanarGraphGenerator
     private lateinit var graph: Graph<PlanarVertex, PlanarEdge>
 
@@ -31,7 +31,7 @@ internal class ParallelBidirectionalAStarShortestPathSearchTest {
     fun search() {
         val (source, destination) = generator.generateSourceDestination(graph)
         val expectedPath = DijkstraShortestPathSearch(graph).search(source, destination)
-        val actualPath = ParallelBidirectionalAStarShortestPathSearch(graph, AStarEuclideanDistanceHeuristic()).search(source, destination)
+        val actualPath = ParallelWorkersAStarShortestPathSearch(graph, AStarEuclideanDistanceHeuristic(), 4).search(source, destination)
         Assertions.assertEquals(expectedPath, actualPath)
     }
 }

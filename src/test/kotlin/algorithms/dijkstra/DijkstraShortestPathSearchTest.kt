@@ -55,7 +55,6 @@ internal class DijkstraShortestPathSearchTest {
         val actualPath = searcher.search(v1, v4)
 
         assertEquals(expectedPath, actualPath)
-        assertEquals(3, actualPath.totalWeight)
     }
 
     @Test
@@ -69,7 +68,6 @@ internal class DijkstraShortestPathSearchTest {
         val actualPath = searcher.search(v2, v3)
 
         assertEquals(expectedPath, actualPath)
-        assertEquals(1, actualPath.totalWeight)
     }
 
     @Test
