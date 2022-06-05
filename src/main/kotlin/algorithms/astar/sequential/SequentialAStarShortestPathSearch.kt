@@ -3,8 +3,11 @@ package algorithms.astar.sequential
 import algorithms.ShortestPath
 import algorithms.ShortestPathSearch
 import algorithms.astar.heuristic.AStarAdmissibleHeuristic
+import algorithms.astar.utils.*
+import algorithms.astar.utils.ExpandedVertices
 import algorithms.astar.utils.ExploredPath
-import algorithms.astar.utils.ExploredPathComparator
+import algorithms.astar.utils.MinimalPaths
+import algorithms.astar.utils.PathsQueue
 import graph.Graph
 import graph.Vertex
 import graph.impl.WeightedEdge
@@ -16,41 +19,33 @@ public class SequentialAStarShortestPathSearch<V : Vertex, E : WeightedEdge>(
 ) : ShortestPathSearch<V> {
 
     override fun search(source: V, destination: V): ShortestPath<V> {
-        val distance: MutableMap<V, ExploredPath<V>> = mutableMapOf()
-        val visited: MutableSet<V> = mutableSetOf()
-        val q: TreeSet<ExploredPath<V>> = TreeSet(ExploredPathComparator())
+        val minimalPaths = MinimalPaths<V>()
+        val expandedVertices: ExpandedVertices<V> = mutableSetOf()
+        val q = PathsQueue<V>()
 
-        distance[source] = ExploredPath.initial(source, heuristic.getDistanceEstimate(source, destination))
-        q.add(distance[source]!!)
+        minimalPaths[source] = ExploredPath.initial(source, heuristic.getDistanceEstimate(source, destination))
+        q.add(minimalPaths[source]!!)
 
         while (q.isNotEmpty()) {
-            val currentState = q.pollFirst()!!
-            val currentVertex = currentState.lastVertex
+            val (path, vertex) = q.pollFirst()
 
-            if (currentVertex == destination) return currentState.buildPath(graph)
-            if (visited.contains(currentVertex)) continue
-            visited.add(currentVertex)
+            if (vertex == destination) return path.buildPath(graph)
 
-            for (neighbour in graph.outgoingNeighboursOf(currentVertex)) {
-                if (visited.contains(neighbour)) continue
+            if (expandedVertices.contains(vertex)) continue
+            expandedVertices.add(vertex)
 
-                val neighbourState = currentState.expand(
+            for (neighbour in graph.outgoingNeighboursOf(vertex)) {
+                if (expandedVertices.contains(neighbour)) continue
+
+                val pathToNeighbour = path.expand(
                     neighbour,
-                    graph.getEdge(currentVertex, neighbour)!!,
+                    graph.getEdge(vertex, neighbour)!!,
                     heuristic.getDistanceEstimate(neighbour, destination))
 
-                val neighbourNotVisitedYet = !distance.containsKey(neighbour)
-                if (neighbourNotVisitedYet) {
-                    q.add(neighbourState)
-                    distance[neighbour] = neighbourState
-                    continue
-                }
-
-                val newNeighbourStateBetterThanExisting = neighbourState.totalDistance < distance[neighbour]!!.totalDistance
-                if (newNeighbourStateBetterThanExisting) {
-                    q.remove(distance[neighbour])
-                    q.add(neighbourState)
-                    distance[neighbour] = neighbourState
+                if (pathToNeighbour.canBeBetterThanExistingPath(minimalPaths)) {
+                    q.remove(minimalPaths[neighbour])
+                    minimalPaths[neighbour] = pathToNeighbour
+                    q.add(pathToNeighbour)
                 }
             }
         }

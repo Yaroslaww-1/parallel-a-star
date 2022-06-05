@@ -15,17 +15,17 @@ internal class ParallelBidirectionalAStarShortestPathSearchInOneDirection<V : Ve
     private val heuristic: AStarAdmissibleHeuristic<V>,
 
     private val minimalPath: AtomicReference<Pair<V, Int>>,
-    private val visitedVertices: MutableSet<V>,
-    private val exploredPathForward: MutableMap<V, ExploredPath<V>>,
-    private val exploredPathBackward: MutableMap<V, ExploredPath<V>>,
+    private val expandedVertices: MutableSet<V>,
+    private val minimalPathsForward: MutableMap<V, ExploredPath<V>>,
+    private val minimalPathsBackward: MutableMap<V, ExploredPath<V>>,
     private val finished: AtomicBoolean,
 ) {
 
     fun search(source: V, destination: V) {
         val q: TreeSet<ExploredPath<V>> = TreeSet(ExploredPathComparator())
 
-        exploredPathForward[source] = ExploredPath.initial(source, heuristic.getDistanceEstimate(source, destination))
-        q.add(exploredPathForward[source]!!)
+        minimalPathsForward[source] = ExploredPath.initial(source, heuristic.getDistanceEstimate(source, destination))
+        q.add(minimalPathsForward[source]!!)
 
         while (!finished.get()) {
             if (q.isEmpty()) {
@@ -35,36 +35,36 @@ internal class ParallelBidirectionalAStarShortestPathSearchInOneDirection<V : Ve
 
             val currentPath = q.pollFirst()!!
             val currentVertex = currentPath.lastVertex
-            if (visitedVertices.contains(currentVertex)) continue
-            visitedVertices.add(currentVertex)
+            if (expandedVertices.contains(currentVertex)) continue
+            expandedVertices.add(currentVertex)
 
             val currentStateCanBeBetterThanMin = minimalPath.get() == null || currentPath.totalDistance < minimalPath.get().second
             if (!currentStateCanBeBetterThanMin) continue
 
             for (neighbour in graph.outgoingNeighboursOf(currentVertex)) {
-                if (visitedVertices.contains(neighbour)) continue
+                if (expandedVertices.contains(neighbour)) continue
 
                 val pathToNeighbour = currentPath.expand(
                     neighbour,
                     graph.getEdge(currentVertex, neighbour)!!,
                     heuristic.getDistanceEstimate(neighbour, destination))
 
-                val neighbourNotVisitedYet = !exploredPathForward.containsKey(neighbour)
+                val neighbourNotVisitedYet = !minimalPathsForward.containsKey(neighbour)
                 if (neighbourNotVisitedYet) {
                     q.add(pathToNeighbour)
 
-                    exploredPathForward[neighbour] = pathToNeighbour
+                    minimalPathsForward[neighbour] = pathToNeighbour
 
                     tryUpdateMinimalPath(pathToNeighbour)
                     continue
                 }
 
-                val newNeighbourStateBetterThanExisting = pathToNeighbour.travelledDistance < exploredPathForward[neighbour]!!.travelledDistance
+                val newNeighbourStateBetterThanExisting = pathToNeighbour.travelledDistance < minimalPathsForward[neighbour]!!.travelledDistance
                 if (newNeighbourStateBetterThanExisting) {
-                    q.remove(exploredPathForward[neighbour])
+                    q.remove(minimalPathsForward[neighbour])
                     q.add(pathToNeighbour)
 
-                    exploredPathForward[neighbour] = pathToNeighbour
+                    minimalPathsForward[neighbour] = pathToNeighbour
 
                     tryUpdateMinimalPath(pathToNeighbour)
                 }
@@ -80,9 +80,9 @@ internal class ParallelBidirectionalAStarShortestPathSearchInOneDirection<V : Ve
 
             val sharedVertex = forwardPathPart.lastVertex
 
-            if (!exploredPathBackward.containsKey(sharedVertex)) return
+            if (!minimalPathsBackward.containsKey(sharedVertex)) return
 
-            val backwardPathPart = exploredPathBackward[sharedVertex]!!
+            val backwardPathPart = minimalPathsBackward[sharedVertex]!!
 
             val newDistance = forwardPathPart.travelledDistance + backwardPathPart.travelledDistance
             val oldDistance = oldMinimalPath?.second ?: Int.MAX_VALUE

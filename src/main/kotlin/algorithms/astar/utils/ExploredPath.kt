@@ -19,6 +19,10 @@ internal class ExploredPath<V : Vertex> private constructor(
             neighbour, travelledDistance + edge.distance, newEstimatedDistanceToDestination, this)
     }
 
+    fun canBeBetterThanExistingPath(minimalPaths: MinimalPaths<V>): Boolean {
+        return minimalPaths[this.lastVertex] == null || this.travelledDistance < minimalPaths[this.lastVertex]!!.travelledDistance
+    }
+
     fun <E : WeightedEdge> buildPath(graph: Graph<V, E>): ShortestPath<V> {
         var cur = this
         val path = ShortestPath.empty(cur.lastVertex)
